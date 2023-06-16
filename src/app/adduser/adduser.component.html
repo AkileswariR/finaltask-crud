@@ -17,7 +17,7 @@
             <div class="row vh-100">
                 <div class="col-sm-1 bg-dark">
                     <div class="text-white bg-dark py-5">
-                        <button class="btn btn-dark text-white btn-block w-75" type="button" (click)="loadUsers()">Userlist</button>
+                        <button class="btn btn-dark text-white btn-block " type="button" (click)="loadUsers()">Userlist</button>
                     </div>
                 </div>
                 <div class="col-sm-10">
@@ -25,7 +25,7 @@
                         <button class="btn btn-primary btn-block w-15" type="button" routerLink="/home">Add user</button>
                     </div>
                     <div>
-                        <table id="userTable" class="table table-bordered border-dark">
+                        <table id="userTable" class="table table-bordered border-dark" *ngIf="users.length">
                             <thead>
                                 <tr>
                                     <th>Id</th>
@@ -37,7 +37,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let user of users">
+                                <tr *ngFor="let user of pagedUsers">
                                     <td>{{ user.id }}</td>
                                     <td>{{ user.name }}</td>
                                     <td>{{ user.gender }}</td>
@@ -54,6 +54,12 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div class="pagination">
+                            <button class="page-link float-end" *ngFor="let page of getPaginationRange()" (click)="changePage(page)">
+                {{ page }}
+              </button>
+                        </div>
+
                         <!-- <div class="pagination">
               <button class="page-link float-end" *ngFor="let page of getPaginationRange()" (click)="changePage(page)">
                 {{ page }}
@@ -86,8 +92,8 @@
 
                                     </div>
                                     <div class="form-group text-center">
-                                        <button type="submit" class="btn btn-primary">Save</button>
-                                        <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+                                        <button type="submit" class="btn btn-primary me-2 mt-2">Save</button>
+                                        <button type="button" class="btn btn-secondary me-2 mt-2" (click)="cancelEdit()">Cancel</button>
                                     </div>
                                 </form>
                             </div>
@@ -101,32 +107,3 @@
 </body>
 
 </html>
-
-
-<!-- <div class="edit-form-popup" *ngIf="isEditFormOpen">
-                            <div class="edit-form-container">
-                                <h2>Edit User</h2>
-                                <form (ngSubmit)="saveChanges()" #editForm="ngForm">
-                                    <div class="form-group">
-                                        <label for="name">Name</label>
-                                        <input type="text" class="form-control" id="name" name="name" [(ngModel)]="selectedUser.name" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="gender">Gender</label>
-                                        <input type="text" class="form-control" id="gender" name="gender" [(ngModel)]="selectedUser.gender" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email" [(ngModel)]="selectedUser.email" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="status">Status</label>
-                                        <input type="text" class="form-control" id="status" name="status" [(ngModel)]="selectedUser.status" required>
-                                    </div>
-                                    <div class="form-group text-center">
-                                        <button type="submit" class="btn btn-primary">Save</button>
-                                        <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
-                                    </div>
-                                </form>
-                            </div> -->
-<!-- </div> -->

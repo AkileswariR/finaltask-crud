@@ -9,12 +9,16 @@ import { UserServiceService } from '../user.service.service';
   styleUrls: ['./adduser.component.css']
 })
 export class AdduserComponent implements OnInit {
-  users: any;
+  users: any[]=[];
   selectedUser: any;
   editForm: FormGroup;
   isEditFormOpen: boolean = false;
-    // currentPage: number = 1;
-  // itemsPerPage: number = 4;
+  pagedUsers: any[] = [];
+  currentPage = 1;
+  itemsPerPage = 4;
+  totalItems = 0;
+   user: any =[];
+   userData: any = {};
 
     constructor(private userService: UserServiceService, private formBuilder: FormBuilder) {
     this.editForm = this.formBuilder.group({
@@ -34,23 +38,30 @@ export class AdduserComponent implements OnInit {
     this.userService.getUsers().subscribe(
       response => {
         this.users = response;
+         this.totalItems = this.users.length;
+        this.setPage(1); 
       },
       error => {
         console.log('An error occurred while fetching users:', error);
       }
     );
   }
-  addUser(user: any) {
+ 
+   addUser(user: any) {
     this.userService.addUser(user).subscribe(
-      () => {
+      response => {
         console.log('User added successfully');
-        this.loadUsers(); // Refresh the user list
+        const newlyAddedUser = response;
+        this.users.push(newlyAddedUser);
+        this.totalItems++;
+        this.setPage(this.totalItems);
       },
       error => {
         console.log('An error occurred while adding the user:', error);
       }
     );
   }
+
 
   deleteUser(userId: number): void {
     this.userService.deleteUser(userId).subscribe(
@@ -94,7 +105,10 @@ export class AdduserComponent implements OnInit {
       if (user.id === userId) {
         return { id: userId, ...updatedUser }; // Update the user with the form values
       }
+    this.isEditFormOpen = false;
+
       return user;
+
     });
 
     this.userService.updateUser(userId, updatedUser).subscribe(
@@ -107,97 +121,26 @@ export class AdduserComponent implements OnInit {
       }
     );
   }
+   setPage(page: number): void {
+    this.currentPage = page;
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.pagedUsers = this.users.slice(startIndex, endIndex);
+  }
+
+  getPaginationRange(): number[] {
+    const pageCount = Math.ceil(this.totalItems / this.itemsPerPage);
+    return Array(pageCount).fill(0).map((x, i) => i + 1);
+  }
+
+  changePage(page: number): void {
+    this.setPage(page);
+  }
+    viewData(user: any){
+    this.userData = user;
+  }
 }
 
 
 
-
-
-  // editUser(user: any): void {
-  //   this.selectedUser = { ...user }; // Create a copy of the selected user object
-  //   this.isEditFormOpen = true;
-  // }
-
-  // cancelEdit(): void {
-  //   this.isEditFormOpen = false;
-  // }
-
-  // saveChanges(): void {
-  //   // Update the user data in the user list
-  //   const index = this.users.findIndex((user: { id: any; }) => user.id === this.selectedUser.id);
-  //   if (index !== -1) {
-  //     this.users[index] = this.selectedUser;
-  //     // Close the edit form
-  //     this.isEditFormOpen = false;
-  //   }
-  // }
-
-  // getPaginationRange(): number[] {
-  //   const pageCount = Math.ceil(this.users.length / this.itemsPerPage);
-  //   return Array.from({ length: pageCount }, (_, index) => index + 1);
-  // }
-
-  // getPaginatedUsers(): any[] {
-  //   const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-  //   return this.users.slice(startIndex, startIndex + this.itemsPerPage);
-    
-  // }
-
-  // changePage(page: number): void {
-  //   this.currentPage = page;
-  // }
-
-  // nextPage(): void {
-  //   const totalPages = Math.ceil(this.users.length / this.itemsPerPage);
-  //   if (this.currentPage < totalPages) {
-  //     this.currentPage++;
-  //   }
-  // }
-
-  // previousPage(): void {
-  //   if (this.currentPage > 1) {
-  //     this.currentPage--;
-  //   }
-  // }
-
-  // getUserIndex(user: any): number {
-  //   return this.users.indexOf(user);
-  // }
-
-  // editUser(user: any): void {
-  //   this.selectedUser = { ...user }; // Create a copy of the selected user object
-  //   this.isEditFormOpen = true;
-
-  //   // Set the form values based on the selected user
-  //   this.editForm.patchValue({
-  //     name: this.selectedUser.name,
-  //     gender: this.selectedUser.gender,
-  //     email: this.selectedUser.email,
-  //     status: this.selectedUser.status
-  //   });
-  // }
-
-  // cancelEdit(): void {
-  //   this.isEditFormOpen = false;
-  //   this.editForm.reset(); // Reset the form values
-  // }
-  //   saveChanges(): void {
-  //   // Update the user data in the user list
-  //   this.users = this.users.map((user: any) => {
-  //     if (user.id === this.selectedUser.id) {
-  //       return this.editForm.value; // Update the user with the form values
-  //     }
-  //     return user;
-  //   });
-
-  //   this.userService.updateUser(this.selectedUser.id, this.editForm.value).subscribe(
-  //     () => {
-  //       console.log('User updated successfully');
-  //       this.isEditFormOpen = false; // Close the edit form
-  //     },
-  //     error => {
-  //       console.log('An error occurred while updating the user:', error);
-  //     }
-  //   );
-  // }
 
