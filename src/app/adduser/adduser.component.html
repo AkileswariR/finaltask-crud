@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>CRUD OPERATION</title>
+</head>
+
+<body>
+    <section>
+        <div class="container-fluid">
+            <div class="row vh-100">
+                <div class="col-sm-1 bg-dark">
+                    <div class="text-white bg-dark py-5">
+                        <button class="btn btn-dark text-white btn-block w-75" type="button" (click)="loadUsers()">Userlist</button>
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="float-end my-5">
+                        <button class="btn btn-primary btn-block w-15" type="button" routerLink="/home">Add user</button>
+                    </div>
+                    <div>
+                        <table id="userTable" class="table table-bordered border-dark">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                    <th>Gender</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let user of users">
+                                    <td>{{ user.id }}</td>
+                                    <td>{{ user.name }}</td>
+                                    <td>{{ user.gender }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.status }}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-warning me-2" (click)="editUser(user)">
+                      <i class="fa fa-pencil" style="font-size:17px"></i>
+                    </button>
+                                        <button class="btn btn-sm btn-danger me-2" (click)="deleteUser(user.id)">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- <div class="pagination">
+              <button class="page-link float-end" *ngFor="let page of getPaginationRange()" (click)="changePage(page)">
+                {{ page }}
+              </button>
+            </div> -->
+
+
+                        <div class="edit-form-popup" *ngIf="isEditFormOpen">
+                            <div class="edit-form-container">
+                                <h2>Edit User</h2>
+                                <form [formGroup]="editForm" (ngSubmit)="saveChanges()">
+                                    <div class="form-group">
+                                        <label for="name">Name</label>
+                                        <input type="text" class="form-control" id="name" formControlName="name" required>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="gender">Gender</label>
+                                        <input type="text" class="form-control" id="gender" formControlName="gender" required>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" formControlName="email" required>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="status">Status</label>
+                                        <input type="text" class="form-control" id="status" formControlName="status" required>
+
+                                    </div>
+                                    <div class="form-group text-center">
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                        <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
+
+
+<!-- <div class="edit-form-popup" *ngIf="isEditFormOpen">
+                            <div class="edit-form-container">
+                                <h2>Edit User</h2>
+                                <form (ngSubmit)="saveChanges()" #editForm="ngForm">
+                                    <div class="form-group">
+                                        <label for="name">Name</label>
+                                        <input type="text" class="form-control" id="name" name="name" [(ngModel)]="selectedUser.name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="gender">Gender</label>
+                                        <input type="text" class="form-control" id="gender" name="gender" [(ngModel)]="selectedUser.gender" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" [(ngModel)]="selectedUser.email" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="status">Status</label>
+                                        <input type="text" class="form-control" id="status" name="status" [(ngModel)]="selectedUser.status" required>
+                                    </div>
+                                    <div class="form-group text-center">
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                        <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+                                    </div>
+                                </form>
+                            </div> -->
+<!-- </div> -->
